@@ -109,6 +109,7 @@ public class DicegameRestController {
            // if (currUserStoredInfo.get("password").asText().equals(userCred.getAsString("password"))) 
            if (pass1.equals(pass2))
             {
+                currentUser = credentials.get("UserName");
                 return "dicee";
             }
         }
@@ -145,36 +146,16 @@ public class DicegameRestController {
         FileWriter fileWriter = new FileWriter(fileName);
         fileWriter.write(obj2.toJSONString());
         fileWriter.close();
-
+         currentUser = credentials.get("UserName");
         return "dicee";
     }
-
-//@PostMapping(path = "/getScore", produces = MediaType.APPLICATION_JSON_VALUE)
-//public ResponseEntity<JSONObject> sendScore(@RequestParam Map<String, String> credentials) {
-//    String fileName = userDataPath + File.separator + currentUser + ".json";
-//    File f = new File(fileName);
-//    JSONObject lifeScore = new JSONObject();
-//
-//    if (f.exists()) {
-//        try {
-//            JsonNode jsonNode = objectMapper.readTree(f);
-//            String scoree = jsonNode.get("score").asText();
-//            lifeScore.put("score", scoree);
-//        } catch (IOException ex) {
-//            Logger.getLogger(AceOfSpadesRestController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
-//
-//    return ResponseEntity.ok(lifeScore);
-//}
-//    
 
     @PostMapping(path = "/getScore", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JSONObject> sendScore(@RequestParam Map<String, String> credentials) {
         JSONObject userTotalScore = new JSONObject();
 
-
-        String fileName = userDataPath + File.separator + credentials.get("UserName") + ".json";
+        // String fileName = userDataPath + File.separator + credentials.get("UserName") + ".json";
+                String fileName = userDataPath + File.separator + currentUser+ ".json";
         File f = new File(fileName);
         JSONObject lifeScore = new JSONObject();
 
@@ -189,7 +170,7 @@ public class DicegameRestController {
             lifeScore.put("score", scoree);
 
         }
-        //         System.out.println("Score from boot*************** : " + lifeScore.get("score") );
+                //System.out.println("Score from boot*************** : " + lifeScore.get("score") );
 
         return ResponseEntity.ok(lifeScore);
     }

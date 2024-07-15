@@ -154,18 +154,23 @@ function sendScore(score) {
     });
 }
 
+// alert("ok"); 
+alert("Hello! I am an alert box!!");
+function newUserPage() {
+//   var loginPage = document.getElementById("loginFormContainer");
+// loginPage.style.display = "block";
+      var loginFrame = document.querySelector(".login");
+    loginFrame.style.display = "none";
 
-function newUserPage(){
- var box =  document.querySelector(".loginBox"); 
- box.style.display= "none"; 
- document.querySelector(".loginForm").style.display = "none"; 
-var btn  =  document.querySelector(".loginBtn"); 
-btn.style.display = "none"; 
+    var logginPage  = document.querySelector(".signUpFormContainer"); 
+    logginPage.style.display = "flex";
 
-  var signUpPage =  document.querySelector(".signUpPage"); 
-  signUpPage.style.display = "block"; 
- 
- var box2 =  document.querySelector(".signUpForm");
- box2.style.display = "block"; 
- 
+
+
+
+    // var box = document.querySelector(".loginBox");
+    // box.style.display = "none";
+
+    // var btn = document.querySelector(".loginBtn");
+    // btn.style.display = "none";
 }

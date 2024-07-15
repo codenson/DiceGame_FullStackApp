@@ -1,53 +1,71 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
 <html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="styles.css" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link
-            href="https://fonts.googleapis.com/css?family=Indie+Flower|Lobster"
-            rel="stylesheet"
-            />
-    </head>
-    <body>
-        <div class="login">
-            <div class = "loginBox box1">
+
+<head>
+    <title>Login and Sign Up</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower|Lobster" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="login">
+        <div id="loginFormContainer">
+            <div class="loginBox">
                 <h1>Enter Logging info below : </h1>
+                <br>
             </div>
-            <div class="loginBox box1">
-                <form  class="loginForm" action="/logginCredentials" method="post">
+            <div class="loginBox">
+                <form class="loginForm" action="/logginCredentials" method="post">
                     <h2>Enter User Name : </h2>
-                    <input type="text" placeholder = "User name " name="UserName" required>
-                     <h2>Enter Pass Word : </h2>
-                    <input type="text" placeholder = "Password : " name="Password" required>
-                    <input type="submit" value="Submit">
+
+                    <input type="text" placeholder="User name " name="UserName" required>
+                    <h2>Enter Pass Word : </h2>
+                    <input type="text" placeholder="Password : " name="Password" required>
+                    <br><br>
+                    <div id="item">
+                        <input type="submit" value="Submit">
+                    </div>
+                    <!-- <input type="submit" value="Submit"> -->
                 </form>
             </div>
-            <div> 
-                <button class ="loginBtn" onclick="newUserPage()">Create new Account</button>     
+            <br>
+            <hr>
+            <br>
+            <div class="loginBox">
+                <button class="loginBtn" onclick="newUserPage()">Sign-Up</button>
             </div>
-            
         </div>
-        <div class ="signUpPage">
-            <h1 class ="signUpPage">Fill Up the form below to signUp</h1>
-            <form  class ="signUpForm" action="/signUp" method="post">
-                    <h2>Enter User Name : </h2>
-                    <input type="text" placeholder = "User name " name="UserName" required>
-                     <h2>Enter Pass Word : </h2>
-                    <input type="text" placeholder = "Password : " name="Password" required>
-                    <input type="text" placeholder = "ReEnter Password : " name="PasswordRenter" required>
-                    <input type="submit" value="Submit">
-                </form>
-            
-            
-        </div>
-         <script src="index.js"></script>
-      
-       
-    </body>
+
+
+    </div>
+
+
+    <div class="signUpFormContainer">
+        <h1>SignUp</h1>
+        <form action="/signUp" method="post">
+            <h2>Enter User Name : </h2>
+
+            <input type="text" placeholder="User name" name="UserName" required>
+            <h2>Enter Pass Word : </h2>
+            <input type="text" placeholder="Password : " name="Password" required>
+            <br>
+            <br>
+            <input type="text" placeholder="ReEnter Password : " name="PasswordRenter" required>
+            <br>
+            <br>
+            <div id="item">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+
+    </div>
+
+    <!-- 
+    <script src="index.js"></script> -->
+    <footer> 🎲 MG 🎲 </footer>
+    <script src="index.js"></script>
+</body>
+
 </html>
