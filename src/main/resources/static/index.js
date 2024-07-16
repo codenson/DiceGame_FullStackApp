@@ -94,11 +94,14 @@ function rollDice() {
     "Points: " + p1.getScore();
   document.querySelectorAll("p.totalPoints")[1].textContent =
     "Points: " + p2.getScore();
+  score = andomNumber1;
+  //score = 100;
   sendScore(score);
 
 }
 
 function sendScore(score) {
+  console.log("SCore ............... : " + score);
   const url = '/saveScore'; // Replace with your Spring Boot endpoint URL
 
   // Data to send to the server

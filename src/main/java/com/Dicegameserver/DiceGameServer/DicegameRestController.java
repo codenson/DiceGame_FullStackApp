@@ -25,11 +25,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
+
 import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,11 +47,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  *
@@ -69,6 +74,20 @@ public class DicegameRestController {
 
     @Autowired
     ResourceLoader resourceLoader;
+   
+    
+     @ExceptionHandler(Exception.class)
+    public ModelAndView handleGlobalException(Exception ex, WebRequest request) {
+        // Log the exception (optional)
+        // Logger.getLogger(GlobalExceptionHandler.class.getName()).log(Level.SEVERE, null, ex);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("loggingPage"); // Name of the view to render
+        modelAndView.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        modelAndView.addObject("message", "An unexpected error occurred: " + ex.getMessage());
+        
+        return modelAndView;
+    }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String helloWorld() {
@@ -83,18 +102,18 @@ public class DicegameRestController {
     //@ResponseBody
     public String checkCredentials(@RequestParam Map<String, String> credentials) throws IOException {
 
-        System.out.println("cred: " + credentials);
+       // System.out.println("cred: " + credentials);
 
         String fileName = userDataPath + File.separator + credentials.get("UserName") + ".json";
-        System.out.println("FIle Name : "+ fileName);
+       // System.out.println("FIle Name : "+ fileName);
         File userInDatabase = new File(fileName);
-        System.out.println("fileName " + fileName);
+       // System.out.println("fileName " + fileName);
 
         if (!userInDatabase.exists()) {
-            System.out.println("inside ::::");
+           // System.out.println("inside ::::");
             return "loggingPage";
         }
-        System.out.println("File : " +userInDatabase.toString() );
+        //System.out.println("File : " +userInDatabase.toString() );
 
         JsonNode currUserStoredInfo = objectMapper.readTree(userInDatabase);
 
@@ -138,8 +157,8 @@ public class DicegameRestController {
         }
         //System.out.println("File : " +file.toString() );
         if (!(credentials.get("Password").trim().equals(credentials.get("PasswordRenter").trim()))) {
-            System.out.printf("password1 %s + password2 %s", credentials.get("Password"), credentials.get("PasswordRenter"));
-            System.out.printf("Password issue ");
+          //  System.out.printf("password1 %s + password2 %s", credentials.get("Password"), credentials.get("PasswordRenter"));
+           /// System.out.printf("Password issue ");
             return "loggingPage";
 
         }
@@ -174,5 +193,129 @@ public class DicegameRestController {
 
         return ResponseEntity.ok(lifeScore);
     }
+
+
+    @PostMapping(path = "/saveScore", produces = MediaType.APPLICATION_JSON_VALUE)
+   // public ResponseEntity<JSONObject> populateScore(@RequestParam Map<String, String> credentials) throws IOException {
+    public ResponseEntity<JSONObject> populateScore(@RequestBody Map<String, String> credentials) throws IOException {
+        JSONObject userTotalScore = new JSONObject();
+
+        // String fileName = userDataPath + File.separator + credentials.get("UserName") + ".json";
+                String fileName = userDataPath + File.separator + currentUser+ ".json";
+        File f = new File(fileName);
+        JSONObject user = new JSONObject();
+      
+
+        if (f.exists()) {
+            JsonNode jsonNode = null;
+            try {
+                jsonNode = objectMapper.readTree(f);
+            } catch (IOException ex) {
+                Logger.getLogger(DicegameRestController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            // System.err.println("jsonNode: 00000000: "+ jsonNode.asText());
+            //  int val1 = jsonNode.get("score").asInt() ; 
+            System.out.println("File : " + jsonNode.get("score").asText() );
+              System.out.println("credentials.get(\"score\"): "+ credentials.get("score"));
+              
+            String s =  jsonNode.get("score").asText(); 
+              int val1 = Integer.parseInt(s);
+               String ss =  credentials.get("score"); 
+               
+              int val2 = Integer.parseInt(ss);
+             
+       
+//            int val2 =Integer.parseInt(credentials.get("score")); 
+            
+            int  scoree = val1 + val2;  
+           /// System.out.println("File val1: "+ val1  +" REST val2 : "+ val2+ " raw Str val2 : "+ credentials.get("score") + "New total : "+ scoree); 
+            //System.out.println("vaL : " +  val1  + val2 +"Score: " +scoree ); 
+           // scoree = 10; 
+             
+              String passWord  = jsonNode.get("password").asText(); 
+              user.put("password", passWord); 
+            user.put("score", scoree+"");
+            user.put("userName", currentUser); 
+            System.out.println("New Userrrrrrrr : --------------  : "+user); 
+         
+            // System.err.println("jsonNode: 00000000: "+ jsonNode.asText());
+
+            f.delete(); //deleting the old file   
+              FileWriter fileWriter = new FileWriter(fileName);
+             fileWriter.write(user.toJSONString());
+             fileWriter.close();
+              System.err.println("jsonNode: 00000000: "+ jsonNode.asText());
+        }
+                //System.out.println("Score from boot*************** : " + lifeScore.get("score") );
+
+        return ResponseEntity.ok(user);
+    }
+    
+  
+    
+    
+    
+         public  JSONObject checkJson(Map<String, String> credentials) throws IOException{
+              JSONObject userTotalScore = new JSONObject();
+
+        // String fileName = userDataPath + File.separator + credentials.get("UserName") + ".json";
+                String fileName = userDataPath + File.separator + currentUser+ ".json";
+        File f = new File(fileName);
+        JSONObject user = new JSONObject();
+      
+
+        if (f.exists()) {
+            JsonNode jsonNode = null;
+            try {
+                jsonNode = objectMapper.readTree(f);
+            } catch (IOException ex) {
+                Logger.getLogger(DicegameRestController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            //  jsonNode.put(jsonNode.get("score")+  credentials.get("score")); 
+            int val1 = jsonNode.get("score").asInt() ; 
+       
+            int val2 =Integer.parseInt(credentials.get("score")); 
+            
+            int  scoree = val1 + val2; 
+            //System.out.println(); 
+            //System.err.print("Err Score : "  +scoree );
+            user.put(jsonNode.get("userName").asText(), currentUser);
+            user.put("score", scoree+"");
+
+//            f.delete(); //deleting the old file
+//            System.out.println("User: " + user);
+////            File UpdateFile = new File(fileName);
+//            
+//              FileWriter fileWriter = new FileWriter(fileName);
+//             fileWriter.write(user.toJSONString());
+//             fileWriter.close();
+            
+         
+
+        }
+   
+            
+            return user;  
+            
+        
+        }
+    public static void main (String args []){
+        DicegameRestController contoller  = new DicegameRestController(); 
+        contoller.currentUser = "blah9090"; 
+        Map<String, String> map  = new HashMap();
+      //  HashMap<String,Integer > map  = new HashMap(); 
+        map.put("score", "10"); 
+        try {
+            contoller.populateScore(map);
+        } catch (IOException ex) {
+            System.out.println("ERR ....."); 
+        }
+        
+        
+    
+    }
+     
+
 
 }

@@ -22,7 +22,7 @@ h1 {
 }
 
 p {
-  font-size: 1rem;
+  font-size: 2rem;
   color: #4ecca3;
   font-family: "Indie Flower", cursive;
 }
@@ -92,6 +92,13 @@ footer {
    align-items: center; */
     justify-content: center;
   /* align-items: center; */
+
+}
+#footer{
+        display: flex;
+       /* justify-content:first baseline; */
+       align-content: center;
+
 
 }
           
