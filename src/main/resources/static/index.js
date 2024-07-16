@@ -20,68 +20,46 @@ class Player {
 let p1 = new Player("P1");
 let p2 = new Player("P2");
 
-var gamestarted = 0; 
+var gamestarted = 0;
 
-if (gamestarted === 0){
-//    var lifeLongScore = fetchLifeTimeScore(); 
-//    document.querySelector(".totalPoints").textContent = lifeLongScore; 
-//       document.querySelector(".totalPoints").textContent = "lifeLongScore"; 
-//    console.log("final score : "+lifeLongScore);
-    
-    
-     fetchLifeTimeScore().then(lifeLongScore => {
-        // Update the DOM or do any processing with lifeLongScore here
-        document.querySelector(".totalPoints").textContent = lifeLongScore;
-        console.log("final score *************: " + lifeLongScore);
-    }).catch(error => {
-        console.error('Error:', error);
-    });
+if (gamestarted === 0) {
+  //    var lifeLongScore = fetchLifeTimeScore(); 
+  //    document.querySelector(".totalPoints").textContent = lifeLongScore; 
+  //       document.querySelector(".totalPoints").textContent = "lifeLongScore"; 
+  //    console.log("final score : "+lifeLongScore);
 
-    gamestarted ++; 
-    
-    
-    
-    
-    
+
+  fetchLifeTimeScore().then(lifeLongScore => {
+    // Update the DOM or do any processing with lifeLongScore here
+    document.querySelector(".totalPoints").textContent = lifeLongScore;
+    console.log("final score *************: " + lifeLongScore);
+  }).catch(error => {
+    console.error('Error:', error);
+  });
+
+  gamestarted++;
+
+
+
+
+
 }
 function fetchLifeTimeScore() {
-    const url = '/getScore';
-    return fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    }).then(lifeTimeScore => {
-        return lifeTimeScore.score;
-    });
+  const url = '/getScore';
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  }).then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  }).then(lifeTimeScore => {
+    return lifeTimeScore.score;
+  });
 }
-//function fetchLifeTimeScore(){
-//    const url = '/getScore';
-//    fetch(url, {
-//        method: 'POST',
-//        headers: {
-//            'Content-Type': 'application/json'
-//        },
-//       
-//    }).then(response => {
-//        if (!response.ok) {
-//            throw new Error('Network response was not ok');
-//        }
-//        return response.json();
-//    }).then(lifeTimeScore => {
-//        JSON.parse(lifeTimeScore); 
-//       return  lifeTimeScore.score; 
-//        
-//    }).catch(error => {
-//    console.error('Error:', error);
-//  });
-//    
-//}
 
 function rollDice() {
   var andomNumber1 = Math.floor(Math.random() * 6 + 1);
@@ -92,9 +70,9 @@ function rollDice() {
   document.querySelector("img.img1").setAttribute("src", image1);
 
   var andomNumber2 = Math.floor(Math.random() * 6 + 1);
-  var imageName = andomNumber2+".png";
+  var imageName = andomNumber2 + ".png";
   image2 = "dice" + imageName;
-  console.log("image2: "+image2 ); 
+  console.log("image2: " + image2);
 
   document.querySelector("img.img2").setAttribute("src", image2);
 
@@ -112,65 +90,51 @@ function rollDice() {
 
   document.querySelectorAll("p.wins")[0].textContent = "Wins: " + p1.wins;
   document.querySelectorAll("p.wins")[1].textContent = "Wins: " + p2.wins;
-  //   document.querySelectorAll("totalPoints")[0].textContent =
-  //     "TotalPoints: " + p1.getScore();
   document.querySelectorAll("p.totalPoints")[0].textContent =
     "Points: " + p1.getScore();
   document.querySelectorAll("p.totalPoints")[1].textContent =
     "Points: " + p2.getScore();
-    sendScore(score); 
- 
+  sendScore(score);
+
 }
 
 function sendScore(score) {
-    const url = '/saveScore'; // Replace with your Spring Boot endpoint URL
+  const url = '/saveScore'; // Replace with your Spring Boot endpoint URL
 
-    // Data to send to the server
-    const data = {
-        score: score
-    };
+  // Data to send to the server
+  const data = {
+    score: score
+  };
 
-    // Fetch POST request
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
+  // Fetch POST request
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
     .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
     })
     .then(data => {
-        console.log('Score sent successfully:', data);
-        // Handle success if needed
+      console.log('Score sent successfully:', data);
+
     })
     .catch(error => {
-        console.error('Error sending score:', error);
-        // Handle error
+      console.error('Error sending score:', error);
     });
 }
 
-// alert("ok"); 
-alert("Hello! I am an alert box!!");
 function newUserPage() {
-//   var loginPage = document.getElementById("loginFormContainer");
-// loginPage.style.display = "block";
-      var loginFrame = document.querySelector(".login");
-    loginFrame.style.display = "none";
 
-    var logginPage  = document.querySelector(".signUpFormContainer"); 
-    logginPage.style.display = "flex";
+  var loginFrame = document.querySelector(".login");
+  loginFrame.style.display = "none";
 
+  var logginPage = document.querySelector(".signUpFormContainer");
+  logginPage.style.display = "flex";
 
-
-
-    // var box = document.querySelector(".loginBox");
-    // box.style.display = "none";
-
-    // var btn = document.querySelector(".loginBtn");
-    // btn.style.display = "none";
 }
