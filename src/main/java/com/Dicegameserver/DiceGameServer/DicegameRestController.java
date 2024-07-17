@@ -135,6 +135,14 @@ public class DicegameRestController {
 
         return "loggingPage";
     }
+     @RequestMapping(path = "/logginCredentials", method = RequestMethod.GET)
+     public String reroute(@RequestParam Map<String, String> credentials){
+          return "loggingPage";
+     }
+
+
+
+     
 
     @RequestMapping(path = "/signUp", method = RequestMethod.POST)
     public String newUser(@RequestParam Map<String, String> credentials) throws IOException {

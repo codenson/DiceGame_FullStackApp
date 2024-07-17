@@ -17,19 +17,3 @@ Roll Dice: Each player's dice roll result is displayed.
 Determine Winner: The player with the higher dice roll wins. In case of a tie, it's declared as such.
 Score Update: Scores are updated in real-time for both players.
 Lifetime Score: Displays the lifetime score of the current user fetched from the backend.
-Setup Instructions
-Clone the repository:
-bash
-Copy code
-git clone https://github.com/yourusername/dicee-game.git
-Navigate to the project directory.
-Open index.html in your web browser to play the game locally.
-Backend Configuration (Spring Boot)
-The backend is powered by Spring Boot, providing REST endpoints for score saving and retrieval.
-Ensure you have Java and Maven installed.
-Update the userDataPath property in application.properties to specify the directory for storing user data.
-Contributors
-Your Name: Developer
-Your Email: developer@example.com
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
