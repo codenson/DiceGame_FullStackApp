@@ -1,49 +1,72 @@
+/**
+ * Player class 
+ * */
 class Player {
   constructor(name) {
     this.name = name;
     this.score = 0;
     this.wins = 0;
   }
+  /**
+   * score getter method. 
+   * @returns player score. 
+   */
   getScore() {
     return this.score;
   }
+  /**
+   * Setter to update player score 
+   * @param {} points  points to be added to player score.
+   */
   updateScore(points) {
     this.score += points;
   }
+  /**
+   * Getter to return player wins.
+   * @returns  player wins.
+   */
   getWins() {
     return this.wins;
   }
+  /**
+   * Setter to update player wins.
+   */
   updateWins() {
     this.wins += 1;
   }
 }
+/**
+ * Plater 1. 
+ */
 let p1 = new Player("P1");
+/**
+ * Player 2.
+ */
 let p2 = new Player("P2");
-
+/**
+ * Tracker gets triggered when the game is started.
+ */
 var gamestarted = 0;
 
+/**
+ * Fetch the life time score from the server when the game is started.
+ */
 if (gamestarted === 0) {
-  //    var lifeLongScore = fetchLifeTimeScore(); 
-  //    document.querySelector(".totalPoints").textContent = lifeLongScore; 
-  //       document.querySelector(".totalPoints").textContent = "lifeLongScore"; 
-  //    console.log("final score : "+lifeLongScore);
-
 
   fetchLifeTimeScore().then(lifeLongScore => {
     // Update the DOM or do any processing with lifeLongScore here
     document.querySelector(".totalPoints").textContent = lifeLongScore;
-    console.log("final score *************: " + lifeLongScore);
   }).catch(error => {
     console.error('Error:', error);
   });
 
   gamestarted++;
-
-
-
-
-
 }
+
+/**
+ * Fetch the life time score from the server.
+ * @returns Player's life time score.
+ */
 function fetchLifeTimeScore() {
   const url = '/getScore';
   return fetch(url, {
@@ -61,11 +84,14 @@ function fetchLifeTimeScore() {
   });
 }
 
+/**
+ * Dice roller fucntion gets triggered when the roll button is clicked.
+ * Updates the  player score and player wins and displays the score on the screen.
+ * sends the score to sendScore function. 
+ */
 function rollDice() {
   var andomNumber1 = Math.floor(Math.random() * 6 + 1);
   image1 = "dice" + andomNumber1 + ".png";
-
-  // document.querySelector(" img.img1").src = andomNumber1;
 
   document.querySelector("img.img1").setAttribute("src", image1);
 
@@ -100,6 +126,10 @@ function rollDice() {
 
 }
 
+/**
+ * Function to update the player's lifetime score on the server.
+ * @param {} score Player's round score. 
+ */
 function sendScore(score) {
   console.log("SCore ............... : " + score);
   const url = '/saveScore'; // Replace with your Spring Boot endpoint URL
@@ -132,6 +162,9 @@ function sendScore(score) {
     });
 }
 
+/**
+ * funtion  to display the login page when newUser button is clicked.
+ */
 function newUserPage() {
 
   var loginFrame = document.querySelector(".login");

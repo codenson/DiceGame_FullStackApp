@@ -55,23 +55,33 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
+ * Dice Game controller. Deals with endpoints.
  *
  * @author guero
  */
 @Controller
 public class DicegameRestController {
 
-    JSONObject obj = new JSONObject();
+    /**
+     * Keeps track of current user.
+     */
     String currentUser = "";
+    /**
+     * Object mapper to parse data on files into an Object.
+     */
     ObjectMapper objectMapper = new ObjectMapper();
-    private String jsonStoragePath;
-
+    /**
+     * Path to where User data (JSON files ) get stored.
+     */
     @Value("${user.data.path}")
     private String userDataPath;
 
-    @Autowired
-    ResourceLoader resourceLoader;
-
+    /**
+     * Exception error Handler. Redirects the user back to the logging page.
+     * @param ex
+     * @param request
+     * @return logging page.
+     */
     @ExceptionHandler(Exception.class)
     public ModelAndView handleGlobalException(Exception ex, WebRequest request) {
 
@@ -82,13 +92,26 @@ public class DicegameRestController {
         return modelAndView;
     }
 
+    /**
+     * Method maps user request to the Website's home page.
+     *
+     * @return logging page.
+     */
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String helloWorld() {
-
         return "loggingPage";
 
-    }
+    }  
 
+    /**
+     * User authorization checker. Checks user's username and password against
+     * credential on JSON database.
+     *
+     * @param credentials includes user's username and password.
+     * @return dice game webpage in case credentials authorization checks out,
+     * otherwise displays logging page again.
+     * @throws IOException Exception in case files does not exist.
+     */
     @SuppressWarnings("unused")
     @RequestMapping(path = "/logginCredentials", method = RequestMethod.POST)
     public String checkCredentials(@RequestParam Map<String, String> credentials) throws IOException {
@@ -106,11 +129,11 @@ public class DicegameRestController {
         userCred.put("userName", credentials.get("UserName").trim());
         userCred.put("password", credentials.get("Password").trim());
 
-        String pass1 = currUserStoredInfo.get("password").asText().trim();
-        String pass2 = userCred.getAsString("password").trim();
+        String passInDatabase = currUserStoredInfo.get("password").asText().trim();
+        String passFromUser = userCred.getAsString("password").trim();
 
         if (userCred.getAsString("userName").equals(currUserStoredInfo.get("userName").asText())) {
-            if (pass1.equals(pass2)) {
+            if (passInDatabase.equals(passFromUser)) {
                 currentUser = credentials.get("UserName");
                 return "dicee";
             }
@@ -119,14 +142,19 @@ public class DicegameRestController {
         return "loggingPage";
     }
 
-    @RequestMapping(path = "/logginCredentials", method = RequestMethod.GET)
-    public String reroute(@RequestParam Map<String, String> credentials) {
-        return "loggingPage";
-    }
-
+    /**
+     * Method to register new user. Makes a new directory to store user's
+     * credentials as a JSON if the dir does not exists. It confirms password
+     * and password reentry are matching before allowing user to be registered.
+     *
+     * @param credentials Consists of username, password and password re-entry.
+     * @return returns logging page if user registration fails, otherwise it
+     * redirects the user to the dice page.
+     * @throws IOException exception in case the file system fails.
+     */
     @RequestMapping(path = "/signUp", method = RequestMethod.POST)
     public String newUser(@RequestParam Map<String, String> credentials) throws IOException {
-        
+
         JSONObject obj2 = new JSONObject();
         obj2.put("userName", credentials.get("UserName"));
         obj2.put("password", credentials.get("Password"));
@@ -141,13 +169,11 @@ public class DicegameRestController {
             return "loggingPage";
 
         }
-          File directory = new File(userDataPath);
-           if (!directory.exists() || ! directory.isDirectory()) {
-               directory.mkdirs();
-           
-        } 
-       
-       
+        File directory = new File(userDataPath);
+        if (!directory.exists() || !directory.isDirectory()) {
+            directory.mkdirs();
+
+        }
 
         if (!(credentials.get("Password").trim().equals(credentials.get("PasswordRenter").trim()))) {
             return "loggingPage";
@@ -159,8 +185,15 @@ public class DicegameRestController {
         return "dicee";
     }
 
+    /**
+     * Method to update index.js with the user's total score so it can displayed
+     * at dicee page at the beggining of the game.
+     *
+     * @return CurrentUser's life score.
+     */
     @PostMapping(path = "/getScore", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JSONObject> sendScore(@RequestParam Map<String, String> credentials) {
+//    public ResponseEntity<JSONObject> sendScore(@RequestParam Map<String, String> credentials) 
+    public ResponseEntity<JSONObject> sendScore() {
         JSONObject userTotalScore = new JSONObject();
 
         String fileName = userDataPath + File.separator + currentUser + ".json";
@@ -182,6 +215,15 @@ public class DicegameRestController {
         return ResponseEntity.ok(lifeScore);
     }
 
+    /**
+     * Method is an endpoint that receives currUser's score and updates the
+     * total life score.
+     *
+     * @param credentials values of round's score sent from game's logic
+     * index.js.
+     * @return
+     * @throws IOException
+     */
     @PostMapping(path = "/saveScore", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JSONObject> populateScore(@RequestBody Map<String, String> credentials) throws IOException {
         JSONObject userTotalScore = new JSONObject();
@@ -221,36 +263,10 @@ public class DicegameRestController {
         return ResponseEntity.ok(user);
     }
 
-    public JSONObject checkJson(Map<String, String> credentials) throws IOException {
-        JSONObject userTotalScore = new JSONObject();
-
-        String fileName = userDataPath + File.separator + currentUser + ".json";
-        File f = new File(fileName);
-        JSONObject user = new JSONObject();
-
-        if (f.exists()) {
-            JsonNode jsonNode = null;
-            try {
-                jsonNode = objectMapper.readTree(f);
-            } catch (IOException ex) {
-                Logger.getLogger(DicegameRestController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            int val1 = jsonNode.get("score").asInt();
-
-            int val2 = Integer.parseInt(credentials.get("score"));
-
-            int scoree = val1 + val2;
-
-            user.put(jsonNode.get("userName").asText(), currentUser);
-            user.put("score", scoree + "");
-
-        }
-
-        return user;
-
-    }
-
+    /**
+     * Main method for testing.sss
+     * @param args
+     */
     public static void main(String args[]) {
         DicegameRestController contoller = new DicegameRestController();
         contoller.currentUser = "blah9090";
